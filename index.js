@@ -1,5 +1,6 @@
 const R = require('ramda');
 const Utils = require('./utils');
+const Task = require('data.task');
 
 /**
  * isBrowser - Browser environment detection
@@ -32,12 +33,22 @@ const hasEnumerate = R.composeK(Utils.safeProp('enumerateDevices'),
  */
 const supportsEnumerate = (x) => {
   x = x || window
-  return !isBrowser() ? false
-                      : hasEnumerate(x).fold(e => false, r => Utils.isFunction(r));
+  return hasEnumerate(x).fold(e => false, r => Utils.isFunction(r));
 }
+
+
+const enumerateDevices = () =>
+    if (supportsEnumerate) {
+      return navigator.mediaDevices.enumerateDevices().then(R.indentity, R.indentity)
+    }
+    return 'Error:: enumerate devices not supported';
+  });
+
+const listDevices = () => enumerateDevices();
 
 exports = module.exports = {
   isBrowser,
   isNode,
-  supportsEnumerate
+  supportsEnumerate,
+  listDevices
 }

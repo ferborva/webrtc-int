@@ -30,12 +30,7 @@ describe('Main | Predicate', function() {
         }
       }
       const result = MyMod.supportsEnumerate(window);
-      if (MyMod.isBrowser()) {
-        expect(result).toExist();
-      } else {
-        expect(result).toNotExist();
-      }
-
+      expect(result).toExist();
     });
 
     it('should return false if navigator.mediaDevices.enumerateDevices does not exists', function() {
