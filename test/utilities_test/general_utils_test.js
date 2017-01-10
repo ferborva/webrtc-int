@@ -7,7 +7,7 @@
  */
 
 // Import my module
-const Utils = require('../../utils.js')
+const Utils = require('../../utils/index.js')
 
 // Import testing utils
 const expect = require('expect')

@@ -1,20 +1,6 @@
 const R = require('ramda');
-const Utils = require('./utils');
+const Utils = require('./utils/index');
 const Task = require('data.task');
-
-/**
- * isBrowser - Browser environment detection
- * Predicate
- * @return {Boolean}
- */
-const isBrowser = new Function("try {return this===window;}catch(e){ return false;}");
-
-/**
- * isNode - Node.js environment detection
- * Predicate
- * @return {Boolean}
- */
-const isNode = new Function("try {return this===global;}catch(e){return false;}");
 
 /**
  * Safe look for enumerateDevices key in nested object (navigator lookup)
@@ -28,7 +14,7 @@ const hasEnumerate = R.composeK(Utils.safeProp('enumerateDevices'),
                                 Utils.safeProp('navigator'));
 
 /**
- * Predicate - Verifies if enumerate Devices is supported
+ * Predicate - Verifies if Enumerate Devices exists and is a function
  * @type {Boolean}
  */
 const supportsEnumerate = (x) => {
@@ -36,19 +22,63 @@ const supportsEnumerate = (x) => {
   return hasEnumerate(x).fold(e => false, r => Utils.isFunction(r));
 }
 
+/**
+ * Task - Safe Enumerate Devices Wrapper
+ * @return {Task}
+ */
+const listDevices = new Task((rej, res) => {
+  if (supportsEnumerate) {
+    navigator.mediaDevices.enumerateDevices().then(r => {
+      res(r)
+    }, e => {
+      rej(e)
+    })
+  } else {
+    rej(new Error('Enumerate devices not supported'));
+  }
+})
 
-const enumerateDevices = () =>
+/**
+ * Promise - Safe Enumerate Devices Wrapper
+ * @return {Promise}
+ */
+const listDevicesP = () => {
+  return new Promise((res, rej) => {
     if (supportsEnumerate) {
-      return navigator.mediaDevices.enumerateDevices().then(R.indentity, R.indentity)
+      navigator.mediaDevices.enumerateDevices().then(devices => {
+        res(devices)
+      }, err => {
+        rej(err)
+      })
+    } else {
+      rej(new Error('Enumerate devices not supported'));
     }
-    return 'Error:: enumerate devices not supported';
-  });
+  })
+}
 
-const listDevices = () => enumerateDevices();
+/**
+ * Task - Filtered list of Devices
+ * Only Input Devices (Audio & Video)
+ * @return {Task}
+ */
+const listInputDevices = () => {
+  return listDevices.map(R.filter(Utils.isKindInput))
+}
+
+/**
+ * Promise - Filtered list of Devices
+ * Only Input Devices (Audio & Video)
+ * @return {Promise}
+ */
+const listInputDevicesP = () => {
+  return listDevicesP().then(xs => xs.filter(Utils.isKindInput), error => [])
+}
+
 
 exports = module.exports = {
-  isBrowser,
-  isNode,
   supportsEnumerate,
-  listDevices
+  listDevices,
+  listDevicesP,
+  listInputDevices,
+  listInputDevicesP
 }

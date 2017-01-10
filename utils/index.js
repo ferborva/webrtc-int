@@ -1,19 +1,6 @@
 const R = require('ramda');
 const Either = require('data.either');
 
-/**
- * isBrowser - Browser environment detection
- * Predicate
- * @return {Boolean}
- */
-const isBrowser = new Function("try {return this===window;}catch(e){ return false;}");
-
-/**
- * isNode - Node.js environment detection
- * Predicate
- * @return {Boolean}
- */
-const isNode = new Function("try {return this===global;}catch(e){return false;}");
 
 /**
  * Trace Utility function
@@ -36,6 +23,10 @@ const trace = (tag, x) => {
  * @return {Either}         Either(string value)
  */
 const safeProp = R.curry((target, object) => {
+  // Check for null or undefined values
+  if (object == null) {
+    return Either.Left(`Error:: received null or undefined as target`)
+  }
   const value = R.prop(target, object);
   return value ? Either.Right(value)
                : Either.Left(`Error:: Could not find ${target}`);
@@ -44,10 +35,34 @@ const safeProp = R.curry((target, object) => {
 /**
  * isFunction verification
  * Predicate
+ * 
  * @param  {Object} x [description]
  * @return {Boolean}
  */
 const isFunction = x => R.is(Object, x) && x instanceof Function
+
+/**
+ * Verifies the object passed has a 'kind' key which contains a String with the word 'input' in it
+ * Predicate
+ * 
+ * @param  {Object}  x  Object to be analyzed
+ * @return {Boolean}
+ */
+const isKindInput = x => {
+  const kind = safeProp('kind', x)
+  const result = kind.fold(e => false, r => regIsInput(r))
+  return result
+}
+
+// RegEx Testers
+
+/**
+ * Tests 'input' is found in the passed string
+ * Predicate
+ * 
+ * @type {Boolean}
+ */
+const regIsInput = R.test(/input/ig)
 
 /**
  * Module exporting
@@ -55,5 +70,6 @@ const isFunction = x => R.is(Object, x) && x instanceof Function
 exports = module.exports = {
   trace,
   safeProp,
+  isKindInput,
   isFunction
 }

@@ -9,17 +9,17 @@
  */
 
 // Import my module
-const Utils = require('../../utils.js')
+const Utils = require('../../utils/index.js')
 
 // Import testing utils
 const expect = require('expect')
 const R = require ('ramda')
 
-describe('Util | Function', function() {
+describe('Util | Predicate', function() {
 
   describe('Is Function:: isFunction', function() {
 
-    it('should return true if give a Function', function() {
+    it('should return true if given a Function', function() {
       const res = Utils.isFunction(R.identity);
       expect(res).toExist();
     });

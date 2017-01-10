@@ -11,7 +11,7 @@
  */
 
 // Import my module
-const Utils = require('../../utils.js')
+const Utils = require('../../utils/index.js')
 
 // Import testing utils
 const expect = require('expect')
@@ -40,6 +40,8 @@ describe('Util | Function', function() {
       const res4 = Utils.safeProp('foo', {});             // Object input
       const res5 = Utils.safeProp('foo', []);             // Array input
       const res6 = Utils.safeProp('foo', false);          // Boolean input
+      const res7 = Utils.safeProp('foo', null);           // Null input
+      const res8 = Utils.safeProp('foo', undefined);      // Undefined input
 
       expect(res1.isLeft).toExist('Given a string input return Left');
       expect(res2.isLeft).toExist('Given a number input return Left');
@@ -47,6 +49,8 @@ describe('Util | Function', function() {
       expect(res4.isLeft).toExist('Given a empty object input return Left');
       expect(res5.isLeft).toExist('Given a array input return Left');
       expect(res6.isLeft).toExist('Given a boolean input return Left');
+      expect(res7.isLeft).toExist('Given a null input return Left');
+      expect(res8.isLeft).toExist('Given a undefined input return Left');
     });
 
     it('should be curried', function() {
