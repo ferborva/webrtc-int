@@ -107,7 +107,7 @@ const listInputDevicesP = () => {
  * @return {Object}
  */
 const listSupportedConstraints = () => {
-  if (hasSupportedConstraints) {
+  if (supportsAvailableConstraints) {
     return navigator.mediaDevices.getSupportedConstraints();
   }
 
