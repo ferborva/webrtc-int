@@ -42,4 +42,28 @@ describe('Main | Predicate', function() {
 
   });
 
+  describe('Supports Get Supported Constraints:: supportsAvailableConstraints', function() {
+
+    it('should return true if navigator.mediaDevices.getSupportedConstraints exists & is a Function', function() {
+      let window = {};
+      window.navigator = {
+        mediaDevices: {
+          getSupportedConstraints: function(){
+            return true
+          }
+        }
+      }
+      const result = MyMod.supportsAvailableConstraints(window);
+      expect(result).toExist();
+    });
+
+    it('should return false if navigator.mediaDevices.getSupportedConstraints does not exists', function() {
+      let window = {};
+      window.navigator = {}
+      const result = MyMod.supportsAvailableConstraints(window);
+      expect(result).toNotExist();
+    })
+
+  });
+
 });

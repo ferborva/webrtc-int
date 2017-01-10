@@ -3,15 +3,34 @@ const Utils = require('./utils/index');
 const Task = require('data.task');
 
 /**
- * Safe look for enumerateDevices key in nested object (navigator lookup)
+ * Safe look for mediaDevices API
+ * @param  {Object} Object to look in
+ * @return {Either}
+ *
+ * hasMediaDevices:: x -> Either(string value)
+ */
+const hasMediaDevices = R.composeK(Utils.safeProp('mediaDevices'),
+                                   Utils.safeProp('navigator'));
+
+/**
+ * Safe look for enumerateDevices API (navigator lookup)
  * @param  {Object} Object to look in
  * @return {Either}
  *
  * hasEnumerate:: x -> Either(string value)
  */
 const hasEnumerate = R.composeK(Utils.safeProp('enumerateDevices'),
-                                Utils.safeProp('mediaDevices'),
-                                Utils.safeProp('navigator'));
+                                hasMediaDevices);
+
+/**
+ * Safe look for getSupportedConstraints API (navigator lookup)
+ * @param  {Object} Object to look in
+ * @return {Either}
+ *
+ * hasEnumerate:: x -> Either(string value)
+ */
+const hasSupportedConstraints = R.composeK(Utils.safeProp('getSupportedConstraints'),
+                                hasMediaDevices);
 
 /**
  * Predicate - Verifies if Enumerate Devices exists and is a function
@@ -20,6 +39,15 @@ const hasEnumerate = R.composeK(Utils.safeProp('enumerateDevices'),
 const supportsEnumerate = (x) => {
   x = x || window
   return hasEnumerate(x).fold(e => false, r => Utils.isFunction(r));
+}
+
+/**
+ * Predicate - Verifies if Enumerate Devices exists and is a function
+ * @type {Boolean}
+ */
+const supportsAvailableConstraints = (x) => {
+  x = x || window
+  return hasSupportedConstraints(x).fold(e => false, r => Utils.isFunction(r));
 }
 
 /**
@@ -74,11 +102,24 @@ const listInputDevicesP = () => {
   return listDevicesP().then(xs => xs.filter(Utils.isKindInput), error => [])
 }
 
+/**
+ * Get list of supported Media Devices constraints
+ * @return {Object}
+ */
+const listSupportedConstraints = () => {
+  if (hasSupportedConstraints) {
+    return navigator.mediaDevices.getSupportedConstraints();
+  }
+
+  return new Error('Get Supported Constraints not supported');
+}
 
 exports = module.exports = {
   supportsEnumerate,
+  supportsAvailableConstraints,
   listDevices,
   listDevicesP,
   listInputDevices,
-  listInputDevicesP
+  listInputDevicesP,
+  listSupportedConstraints
 }

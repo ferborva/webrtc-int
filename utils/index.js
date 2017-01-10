@@ -24,7 +24,7 @@ const trace = (tag, x) => {
  */
 const safeProp = R.curry((target, object) => {
   // Check for null or undefined values
-  if (object == null) {
+  if (R.isNil(object)) {
     return Either.Left(`Error:: received null or undefined as target`)
   }
   const value = R.prop(target, object);
