@@ -92,4 +92,12 @@ describe('Util | Cache', function() {
 
   })
 
+  describe('Push items into key:: push', function() {
+
+    it('should create a new array with the passed in values if the key is empty')
+
+    it('should concat the values to the existing key')
+
+  })
+
 })

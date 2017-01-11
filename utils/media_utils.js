@@ -83,8 +83,18 @@ const validateOpts = opts => {
   return true
 }
 
+/**
+ * Get tracks available in a Media Stream object
+ * @param  {MediaStream} stream  MediaStream instance
+ * @return {Array}               Contains the tracks found
+ */
 const getTracks = stream => stream.getTracks()
 
+/**
+ * Stop Media Track
+ * @param  {MediaTrack} track
+ * @return {MediaTrack}
+ */
 const stopTrack = track => track.stop()
 
 /**

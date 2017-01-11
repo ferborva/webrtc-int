@@ -72,8 +72,8 @@ const listSupportedConstraints = () => {
 /**
  * Get User Media control wrapper
  * 
- * @param  {[type]} opts [description]
- * @return {[type]}      [description]
+ * @param  {Object} opts GetUserMedia constraints
+ * @return {Promise}
  */
 const getMedia = (opts = {}) => {
   if (Support.userMedia) {
@@ -88,14 +88,14 @@ const getMedia = (opts = {}) => {
 
 /**
  * Stop all active stream tracks
- * @return {[type]} [description]
+ * @return {Either} Either cotaining error or array with all stopped tracks
  */
-const stopAllTracks = () => {
+const stopAllTracks = () =>
   Cache.get('streams')
        .map(R.map(Media.getTracks))
        .map(R.flatten)
        .map(R.map(Media.stopTrack))
-}
+
 
 exports = module.exports = {
   listDevices,
