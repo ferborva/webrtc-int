@@ -1,61 +1,15 @@
 const R = require('ramda');
 const Utils = require('./utils/index');
+const Media = require('./utils/media_utils');
+const Support = require('./utils/support');
 const Task = require('data.task');
-
-/**
- * Safe look for mediaDevices API
- * @param  {Object} Object to look in
- * @return {Either}
- *
- * hasMediaDevices:: x -> Either(string value)
- */
-const hasMediaDevices = R.composeK(Utils.safeProp('mediaDevices'),
-                                   Utils.safeProp('navigator'));
-
-/**
- * Safe look for enumerateDevices API (navigator lookup)
- * @param  {Object} Object to look in
- * @return {Either}
- *
- * hasEnumerate:: x -> Either(string value)
- */
-const hasEnumerate = R.composeK(Utils.safeProp('enumerateDevices'),
-                                hasMediaDevices);
-
-/**
- * Safe look for getSupportedConstraints API (navigator lookup)
- * @param  {Object} Object to look in
- * @return {Either}
- *
- * hasEnumerate:: x -> Either(string value)
- */
-const hasSupportedConstraints = R.composeK(Utils.safeProp('getSupportedConstraints'),
-                                hasMediaDevices);
-
-/**
- * Predicate - Verifies if Enumerate Devices exists and is a function
- * @type {Boolean}
- */
-const supportsEnumerate = (x) => {
-  x = x || window
-  return hasEnumerate(x).fold(e => false, r => Utils.isFunction(r));
-}
-
-/**
- * Predicate - Verifies if Enumerate Devices exists and is a function
- * @type {Boolean}
- */
-const supportsAvailableConstraints = (x) => {
-  x = x || window
-  return hasSupportedConstraints(x).fold(e => false, r => Utils.isFunction(r));
-}
 
 /**
  * Task - Safe Enumerate Devices Wrapper
  * @return {Task}
  */
 const listDevices = new Task((rej, res) => {
-  if (supportsEnumerate) {
+  if (Support.enumerate) {
     navigator.mediaDevices.enumerateDevices().then(r => {
       res(r)
     }, e => {
@@ -72,7 +26,7 @@ const listDevices = new Task((rej, res) => {
  */
 const listDevicesP = () => {
   return new Promise((res, rej) => {
-    if (supportsEnumerate) {
+    if (Support.enumerate) {
       navigator.mediaDevices.enumerateDevices().then(devices => {
         res(devices)
       }, err => {
@@ -107,19 +61,35 @@ const listInputDevicesP = () => {
  * @return {Object}
  */
 const listSupportedConstraints = () => {
-  if (supportsAvailableConstraints) {
+  if (Support.availableConstraints) {
     return navigator.mediaDevices.getSupportedConstraints();
   }
 
   return new Error('Get Supported Constraints not supported');
 }
 
+/**
+ * Get User Media control wrapper
+ * 
+ * @param  {[type]} opts [description]
+ * @return {[type]}      [description]
+ */
+const getMedia = (opts = {}) => {
+  if (Support.userMedia) {
+    const validation = Media.validateOpts(opts);
+    opts = Media.checkTestMode(opts) ? Media.getTestModeOpts() : opts
+    return validation instanceof Error ? validation
+                                       : Media.getStream(opts)
+  }
+
+  return new Error('Get User Media not supported');
+}
+
 exports = module.exports = {
-  supportsEnumerate,
-  supportsAvailableConstraints,
   listDevices,
   listDevicesP,
   listInputDevices,
   listInputDevicesP,
-  listSupportedConstraints
+  listSupportedConstraints,
+  getMedia
 }
