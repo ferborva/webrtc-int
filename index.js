@@ -1,6 +1,7 @@
 const R = require('ramda');
 const Utils = require('./utils/index');
 const Media = require('./utils/media_utils');
+const Cache = require('./utils/cache');
 const Support = require('./utils/support');
 const Task = require('data.task');
 
@@ -78,11 +79,22 @@ const getMedia = (opts = {}) => {
   if (Support.userMedia) {
     const validation = Media.validateOpts(opts);
     opts = Media.checkTestMode(opts) ? Media.getTestModeOpts() : opts
-    return validation instanceof Error ? validation
+    return validation instanceof Error ? Promise.reject(validation)
                                        : Media.getStream(opts)
   }
 
-  return new Error('Get User Media not supported');
+  return Promise.reject(new Error('Get User Media not supported'));
+}
+
+/**
+ * Stop all active stream tracks
+ * @return {[type]} [description]
+ */
+const stopAllTracks = () => {
+  Cache.get('streams')
+       .map(R.map(Media.getTracks))
+       .map(R.flatten)
+       .map(R.map(Media.stopTrack))
 }
 
 exports = module.exports = {
@@ -91,5 +103,6 @@ exports = module.exports = {
   listInputDevices,
   listInputDevicesP,
   listSupportedConstraints,
-  getMedia
+  getMedia,
+  stopAllTracks
 }

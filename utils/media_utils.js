@@ -1,9 +1,36 @@
 const R = require('ramda')
 const Utils = require('./index')
+const Cache = require('./cache')
 
+/**
+ * Get Stream with getUserMedia API
+ * @param  {Object} opts getUserMedia constraints to be used
+ * @return {Promise}
+ */
 const getStream = opts => {
-  return navigator.mediaDevices.getUserMedia(opts)
-    .then(R.identity, R.identity)
+  return new Promise((resolve, reject) => {
+    navigator.mediaDevices.getUserMedia(opts)
+              .then(res => {
+                resolve(checkNoStreamErr(res))
+              }, err => {
+                reject(err)
+              })
+  })
+}
+
+/**
+ * Get User Media result check
+ * Necessary due to the getUserMedia Promise resolving correctly in insecure origins.
+ * @param  {Object} res Result give by getUserMedia
+ * @return {Promise}
+ */
+const checkNoStreamErr = res => {
+  const val = /Only secure origins are allowed/.test(res.message);
+  if (val) {
+    return Promise.reject(res)
+  }
+  Cache.push('streams', res);
+  return Promise.resolve(res)
 }
 
 /**
@@ -56,6 +83,10 @@ const validateOpts = opts => {
   return true
 }
 
+const getTracks = stream => stream.getTracks()
+
+const stopTrack = track => track.stop()
+
 /**
  * Module exports
  * @type {Object}
@@ -64,5 +95,7 @@ exports = module.exports = {
   getStream,
   checkTestMode,
   getTestModeOpts,
-  validateOpts
+  validateOpts,
+  getTracks,
+  stopTrack
 }

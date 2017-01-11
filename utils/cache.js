@@ -20,6 +20,23 @@ const set = R.curry((key, xs) => {
 })
 
 /**
+ * Push values to a cached array
+ * Curried
+ * @param  {String} key   Key where the values will be pushed
+ * @param  {Array} xs    Values to be pushed
+ * @return {Object}       Value to be saved returned untouched
+ */
+const push = R.curry((key, xs) => {
+  const curr = cache[key]
+  if (curr) {
+    cache[key] = cache[key].concat(xs)
+  } else {
+    cache[key] = [].concat(xs)
+  }
+  return cache[key];
+})
+
+/**
  * Replace the whole cache with a new object
  * @param  {Object} obj New cache value
  * @return {Object}     New cache value untouched
@@ -57,6 +74,7 @@ const clear = () => {
  */
 exports = module.exports = {
   set,
+  push,
   replace,
   get,
   getAll,
