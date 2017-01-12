@@ -29,7 +29,7 @@ const checkNoStreamErr = res => {
   if (val) {
     return Promise.reject(res)
   }
-  Cache.push('streams', res);
+  Cache.push('streams', res)
   return Promise.resolve(res)
 }
 
@@ -45,24 +45,40 @@ const checkTestMode = opts => {
 }
 
 /**
+ * Default Test Mode constraints
+ * @type {Object}
+ */
+let testModeOpts = {
+  video: {
+    height: 240,
+    width: 320,
+    frameRate: {
+      ideal: 10,
+      max: 15
+    },
+    facingMode: 'user'
+  },
+  audio: {
+    echoCancellation: true
+  }
+}
+
+/**
  * Get getUserMedia Test Mode options
  * @return {[type]} [description]
  */
 const getTestModeOpts = () => {
-  return {
-    video: {
-      height: 240,
-      width: 320,
-      frameRate: {
-        ideal: 10,
-        max: 15
-      },
-      facingMode: 'user'
-    },
-    audio: {
-      echoCancellation: true
-    }
-  }
+  return testModeOpts
+}
+
+/**
+ * Set getUserMedia Test Mode options
+ * @param  {Object} o  New test mode constraints
+ * @return {Object}    Received constraints untouched
+ */
+const setTestModeOpts = o => {
+  testModeOpts = o
+  return o
 }
 
 /**

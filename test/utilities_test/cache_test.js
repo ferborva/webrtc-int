@@ -94,9 +94,30 @@ describe('Util | Cache', function() {
 
   describe('Push items into key:: push', function() {
 
-    it('should create a new array with the passed in values if the key is empty')
+    it('should create a new array with the passed in values if the key is empty', function() {
+      const testVal1 = Cache.get('testVal1')
+      expect(testVal1.isLeft).toExist()
 
-    it('should concat the values to the existing key')
+      Cache.push('testVal1', 1)
+      expect(Cache.get('testVal1')).toEqual(Either.of([1]))
+
+      const testVal2 = Cache.get('testVal2')
+      expect(testVal2.isLeft).toExist()
+
+      Cache.push('testVal2', [1,2,3])
+      expect(Cache.get('testVal2')).toEqual(Either.of([1,2,3]))
+    })
+
+    it('should concat the values to the existing key', function() {
+      Cache.push('testVal', 1)
+      expect(Cache.get('testVal')).toEqual(Either.of([1]))
+
+      Cache.push('testVal', [2,3,4])
+      expect(Cache.get('testVal')).toEqual(Either.of([1,2,3,4]))
+
+      Cache.push('testVal', 5)
+      expect(Cache.get('testVal')).toEqual(Either.of([1,2,3,4,5]))
+    })
 
   })
 

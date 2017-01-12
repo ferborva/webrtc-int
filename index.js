@@ -1,24 +1,34 @@
-const R = require('ramda');
-const Utils = require('./utils/index');
-const Media = require('./utils/media_utils');
-const Cache = require('./utils/cache');
-const Support = require('./utils/support');
-const Task = require('data.task');
+const R = require('ramda')
+const Utils = require('./utils/index')
+const Media = require('./utils/media_utils')
+const Cache = require('./utils/cache')
+const Support = require('./utils/support')
+const Task = require('data.task')
 
 /**
  * Task - Safe Enumerate Devices Wrapper
  * @return {Task}
  */
 const listDevices = new Task((rej, res) => {
-  if (Support.enumerate) {
-    navigator.mediaDevices.enumerateDevices().then(r => {
-      res(r)
-    }, e => {
-      rej(e)
-    })
-  } else {
-    rej(new Error('Enumerate devices not supported'));
-  }
+  getMedia({video: true, audio: true}).then(r => {
+      // Stop media tracks
+    const tracks = r.getTracks();
+    tracks.forEach((track) => {
+      track.stop();
+    });
+    // Enumerate
+    if (Support.enumerate) {
+      navigator.mediaDevices.enumerateDevices().then(r => {
+        res(r)
+      }, e => {
+        rej(e)
+      })
+    } else {
+      rej(new Error('Enumerate devices not supported'))
+    }
+  }, e => {
+    rej(e)
+  })
 })
 
 /**
@@ -27,15 +37,26 @@ const listDevices = new Task((rej, res) => {
  */
 const listDevicesP = () => {
   return new Promise((res, rej) => {
-    if (Support.enumerate) {
-      navigator.mediaDevices.enumerateDevices().then(devices => {
-        res(devices)
-      }, err => {
-        rej(err)
-      })
-    } else {
-      rej(new Error('Enumerate devices not supported'));
-    }
+    // Get permissions
+    getMedia({video: true, audio: true}).then(r => {
+      // Stop media tracks
+      const tracks = r.getTracks();
+      tracks.forEach((track) => {
+        track.stop();
+      });
+      // Enumerate
+      if (Support.enumerate) {
+        navigator.mediaDevices.enumerateDevices().then(devices => {
+          res(devices)
+        }, err => {
+          rej(err)
+        })
+      } else {
+        rej(new Error('Enumerate devices not supported'))
+      }
+    }, e => {
+      rej(e)
+    })
   })
 }
 
@@ -44,18 +65,14 @@ const listDevicesP = () => {
  * Only Input Devices (Audio & Video)
  * @return {Task}
  */
-const listInputDevices = () => {
-  return listDevices.map(R.filter(Utils.isKindInput))
-}
+const listInputDevices = listDevices.map(R.filter(Utils.isKindInput))
 
 /**
  * Promise - Filtered list of Devices
  * Only Input Devices (Audio & Video)
  * @return {Promise}
  */
-const listInputDevicesP = () => {
-  return listDevicesP().then(xs => xs.filter(Utils.isKindInput), error => [])
-}
+const listInputDevicesP = () => listDevicesP().then(xs => xs.filter(Utils.isKindInput), error => [])
 
 /**
  * Get list of supported Media Devices constraints
