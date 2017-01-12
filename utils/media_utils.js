@@ -50,16 +50,17 @@ const checkTestMode = opts => {
  */
 let testModeOpts = {
   video: {
-    height: 240,
-    width: 320,
+    height: 120,
+    width: 160,
     frameRate: {
-      ideal: 10,
-      max: 15
+      ideal: 5,
+      max: 10
     },
     facingMode: 'user'
   },
   audio: {
-    echoCancellation: true
+    echoCancellation: true,
+    volume: 1
   }
 }
 
@@ -121,6 +122,7 @@ exports = module.exports = {
   getStream,
   checkTestMode,
   getTestModeOpts,
+  setTestModeOpts,
   validateOpts,
   getTracks,
   stopTrack

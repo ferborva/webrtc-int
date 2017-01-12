@@ -121,5 +121,6 @@ exports = module.exports = {
   listInputDevicesP,
   listSupportedConstraints,
   getMedia,
-  stopAllTracks
+  stopAllTracks,
+  setTestConstraints: Media.setTestModeOpts
 }
