@@ -3,6 +3,7 @@ const Utils = require('./utils/index')
 const Media = require('./utils/media_utils')
 const Cache = require('./utils/cache')
 const Support = require('./utils/support')
+const ScreenShare = require('./utils/screen_share')
 const Task = require('data.task')
 
 /**
@@ -113,6 +114,20 @@ const stopAllTracks = () =>
        .map(R.flatten)
        .map(R.map(Media.stopTrack))
 
+/**
+ * Check if Barco ScreenShare extension is installed
+ * Predicate Task
+ * 
+ * @return {Task} Task(Boolean Boolean)
+ */
+const checkExtension = ScreenShare.checkExtension
+
+/**
+ * Get Screen/App/Tab stream
+ * @return {Promise}
+ */
+const getScreen = ScreenShare.getScreenConstraints
+
 
 exports = module.exports = {
   listDevices,
@@ -122,5 +137,7 @@ exports = module.exports = {
   listSupportedConstraints,
   getMedia,
   stopAllTracks,
-  setTestConstraints: Media.setTestModeOpts
+  setTestConstraints: Media.setTestModeOpts,
+  checkExtension,
+  getScreen
 }

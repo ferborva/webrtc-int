@@ -9,10 +9,10 @@ const Either = require('data.either');
  * @param  {Object} x   Value found in the transition
  * @return {Object}     Value found in the transition returned intact
  */
-const trace = (tag, x) => {
+const trace = R.curry((tag, x) => {
   console.log(tag, x)
   return x
-}
+})
 
 /**
  * Safely request access to an object's property
