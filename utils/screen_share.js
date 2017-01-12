@@ -48,6 +48,7 @@ const handleMessage = data => {
   // "Cancel" button clicked by user
   if (data == 'PermissionDeniedError') {
     extensionState = 'PermissionDeniedError'
+    sourceId = 'PermissionDeniedError'
     return
   }
 
@@ -145,11 +146,12 @@ const getScreenConstraints = new Task((rej,res) => {
         counter++
       }
 
-      if (counter > 5) {
+      if (counter > 20) {
         clearInterval(interval)
         rej(false)
       }
     }, 500)
+    return
   } else {
     rej(new Error('Screen share extension not available'))
   }
