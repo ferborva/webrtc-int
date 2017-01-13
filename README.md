@@ -8,3 +8,22 @@ Goals:
 - Request screenshare extension
 - Event driven API (?)
 - ES6 Syntax
+
+
+#### Ramda subset used
+
+- compose
+- composeK
+- filter
+- map
+- flatten
+- isNil
+- prop
+- chain
+- test
+- curry
+
+Build command:
+
+`./scripts/build -- src/chain.js src/filter.js src/map.js src/flatten.js src/curry.js src/isNil.js src/prop.js src/is.js src/test.js src/compose.js src/composeK.js > dist/ramda.custom.js`
+

@@ -1,4 +1,4 @@
-const R = require('ramda');
+const R = require('./ramda_subset');
 const Utils = require('./index');
 /**
  * Safe look for mediaDevices API

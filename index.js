@@ -1,4 +1,4 @@
-const R = require('ramda')
+const R = require('./utils/ramda_subset');
 const Utils = require('./utils/index')
 const Media = require('./utils/media_utils')
 const Cache = require('./utils/cache')
