@@ -123,10 +123,39 @@ const stopAllTracks = () =>
 const checkExtension = ScreenShare.checkExtension
 
 /**
- * Get Screen/App/Tab stream
+ * Promise Get Screen/App/Tab stream
  * @return {Promise}
  */
-const getScreen = ScreenShare.getScreenConstraints
+const getScreen = new Task((rej, res) => {
+  checkExtension
+    .fork(rej, r => {
+                ScreenShare.getScreenConstraints
+                 .map(constraints => ({video: constraints}))
+                 .map(getMedia)
+                 .fork(rej, r => {
+                              r.then(res, rej)
+                            })
+              })
+})
+
+/**
+ * Promise Get Screen/App/Tab stream
+ * @return {Promise}
+ */
+const getScreenP = () => {
+  return new Promise((res, rej) => {
+
+    checkExtension
+    .fork(rej, r => {
+                ScreenShare.getScreenConstraints
+                 .map(constraints => ({video: constraints}))
+                 .map(getMedia)
+                 .fork(rej, r => {
+                              r.then(res, rej)
+                            })
+              })
+  })
+}
 
 
 exports = module.exports = {
@@ -136,8 +165,10 @@ exports = module.exports = {
   listInputDevicesP,
   listSupportedConstraints,
   getMedia,
+  getTracks: Media.getTracks,
   stopAllTracks,
   setTestConstraints: Media.setTestModeOpts,
   checkExtension,
-  getScreen
+  getScreen,
+  getScreenP
 }

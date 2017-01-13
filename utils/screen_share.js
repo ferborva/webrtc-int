@@ -23,12 +23,6 @@ let sourceId = ''
 let extensionState = ''
 
 /**
- * Exectued upon SourceId request completion
- * @type {Function}
- */
-let sourceRequestCallback = null
-
-/**
  * Helper function
  * Verifies if an event's origin matches our app's location
  * 
@@ -59,7 +53,7 @@ const handleMessage = data => {
   }
 
   // Extension shared temp sourceId
-  if (data.sourceId && sourceRequestCallback) {
+  if (data.sourceId) {
     sourceId = data.sourceId
   }
 }
