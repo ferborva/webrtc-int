@@ -10,8 +10,8 @@ const Cache = require('./cache')
 const getStream = opts => {
   return new Promise((resolve, reject) => {
     navigator.mediaDevices.getUserMedia(opts)
-              .then(res => {
-                resolve(checkNoStreamErr(res))
+              .then(result => {
+                resolve(checkNoStreamErr(result))
               }, err => {
                 reject(err)
               })
@@ -24,13 +24,13 @@ const getStream = opts => {
  * @param  {Object} res Result give by getUserMedia
  * @return {Promise}
  */
-const checkNoStreamErr = res => {
-  const val = /Only secure origins are allowed/.test(res.message);
+const checkNoStreamErr = result => {
+  const val = /Only secure origins are allowed/.test(result.message);
   if (val) {
-    return Promise.reject(res)
+    return Promise.reject(result)
   }
-  Cache.push('streams', res)
-  return Promise.resolve(res)
+  Cache.push('streams', result)
+  return Promise.resolve(result)
 }
 
 /**

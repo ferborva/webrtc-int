@@ -105,6 +105,38 @@ const checkExtension = new Task((rej, res) => {
 })
 
 /**
+ * Promise
+ * Wraps Extension Check process
+ * @return {Promise}
+ */
+const checkExtensionP = () =>
+  new Promise((res, rej) => {
+    setupListeners()
+
+    if (extensionState == 'ExtAvailable') {
+      return res(true)
+    }
+
+    window.postMessage('verify-installed', '*')
+
+    let counter = 0
+
+    const interval = setInterval(function() {
+      if (extensionState == 'ExtAvailable') {
+        clearInterval(interval)
+        res(true)
+      } else {
+        counter++
+      }
+
+      if (counter > 10) {
+        clearInterval(interval)
+        rej(false)
+      }
+    }, 500)
+  })
+
+/**
  * Request SourceId call
  * @param  {Function} callback [description]
  * @return {[type]}            [description]
@@ -131,7 +163,7 @@ const getScreenConstraints = new Task((rej,res) => {
     const interval = setInterval(function() {
       if (sourceId == 'PermissionDeniedError') {
         clearInterval(interval)
-        rej(sourceId);
+        rej(new Error('Screen Share permission denied by user'));
       } else if (sourceId !== '') {
         screen_constraints.mandatory.chromeMediaSourceId = sourceId
         clearInterval(interval)
@@ -147,7 +179,7 @@ const getScreenConstraints = new Task((rej,res) => {
     }, 500)
     return
   } else {
-    rej(new Error('Screen share extension not available'))
+    rej(new Error('Barco Screen Share extension not responding'))
   }
 })
 

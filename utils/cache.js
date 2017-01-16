@@ -49,7 +49,7 @@ const replace = obj => {
 /**
  * Get value/object from cache key
  * @param  {String} key   Key where the value/object will be looked for
- * @return {Maybe}
+ * @return {Either}
  */
 const get = key => Either.fromNullable(cache[key])
 

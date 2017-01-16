@@ -88,6 +88,44 @@ const listSupportedConstraints = () => {
 }
 
 /**
+ * Promise Get Screen/App/Tab stream
+ * @return {Promise}
+ */
+const getScreen = new Task((rej, res) => {
+  checkExtension
+    .fork(err => {
+            rej(new Error('Barco Screen Share extension is not installed or disabled'))
+          }, r => {
+            ScreenShare.getScreenConstraints
+             .map(constraints => ({video: constraints}))
+             .map(getMedia)
+             .fork(rej, r => {
+                          r.then(res, rej)
+                        })
+          })
+})
+
+/**
+ * Promise Get Screen/App/Tab stream
+ * @return {Promise}
+ */
+const getScreenP = () => {
+  return new Promise((res, rej) => {
+    checkExtension
+    .fork(err => {
+            rej(new Error('Barco Screen Share extension is not installed or disabled'))
+          }, r => {
+            ScreenShare.getScreenConstraints
+             .map(constraints => ({video: constraints}))
+             .map(getMedia)
+             .fork(rej, r => {
+                          r.then(res, rej)
+                        })
+          })
+  })
+}
+
+/**
  * Get User Media control wrapper
  * 
  * @param  {Object} opts GetUserMedia constraints
@@ -115,47 +153,20 @@ const stopAllTracks = () =>
        .map(R.map(Media.stopTrack))
 
 /**
- * Check if Barco ScreenShare extension is installed
- * Predicate Task
+ * Task - Check if Barco ScreenShare extension is installed
+ * Predicate
  * 
  * @return {Task} Task(Boolean Boolean)
  */
 const checkExtension = ScreenShare.checkExtension
 
 /**
- * Promise Get Screen/App/Tab stream
+ * Promise - Check if Barco ScreenShare extension is installed
+ * Predicate
+ * 
  * @return {Promise}
  */
-const getScreen = new Task((rej, res) => {
-  checkExtension
-    .fork(rej, r => {
-                ScreenShare.getScreenConstraints
-                 .map(constraints => ({video: constraints}))
-                 .map(getMedia)
-                 .fork(rej, r => {
-                              r.then(res, rej)
-                            })
-              })
-})
-
-/**
- * Promise Get Screen/App/Tab stream
- * @return {Promise}
- */
-const getScreenP = () => {
-  return new Promise((res, rej) => {
-
-    checkExtension
-    .fork(rej, r => {
-                ScreenShare.getScreenConstraints
-                 .map(constraints => ({video: constraints}))
-                 .map(getMedia)
-                 .fork(rej, r => {
-                              r.then(res, rej)
-                            })
-              })
-  })
-}
+const checkExtensionP = ScreenShare.checkExtensionP
 
 
 exports = module.exports = {
@@ -164,11 +175,11 @@ exports = module.exports = {
   listInputDevices,
   listInputDevicesP,
   listSupportedConstraints,
-  getMedia,
-  getTracks: Media.getTracks,
-  stopAllTracks,
-  setTestConstraints: Media.setTestModeOpts,
   checkExtension,
+  checkExtensionP,
   getScreen,
-  getScreenP
+  getScreenP,
+  getMedia,
+  setTestConstraints: Media.setTestModeOpts,
+  stopAllTracks
 }

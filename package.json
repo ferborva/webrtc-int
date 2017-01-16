@@ -1,32 +1,27 @@
 {
-  "name": "webrtc-int",
-  "version": "0.0.1",
-  "description": "WebRTC Crossbrowser simplified interface",
+  "name": "web-streams",
+  "version": "v1.0.0",
+  "description": "Chrome Web Stream simplified interface",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ferborva/webrtc-int.git"
+    "url": "git+https://<BARCO_USERNAME>@git.barco.com/scm/ed/web-streams.git"
   },
   "keywords": [
-    "webrtc",
+    "web",
+    "chrome",
+    "mediaStreams",
     "simplified"
   ],
-  "author": "ferborva",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/ferborva/webrtc-int/issues"
-  },
-  "homepage": "https://github.com/ferborva/webrtc-int#readme",
+  "author": "Fernando Bordallo",
+  "homepage": "https://git.barco.com/projects/ED/repos/web-streams/browse",
   "dependencies": {
     "data.either": "1.4.0",
-    "data.maybe": "1.2.2",
     "data.task": "3.1.1",
-    "event-emitter": "0.3.4",
-    "ramda": "0.23.0",
-    "webrtc-adapter": "^2.1.0"
+    "ramda": "0.23.0"
   },
   "devDependencies": {
     "expect": "1.20.2"
