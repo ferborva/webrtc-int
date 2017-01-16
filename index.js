@@ -94,7 +94,7 @@ const listSupportedConstraints = () => {
 const getScreen = new Task((rej, res) => {
   checkExtension
     .fork(err => {
-            rej(new Error('Barco Screen Share extension is not installed or disabled'))
+            rej(new Error('Screen Share extension is not installed or disabled'))
           }, r => {
             ScreenShare.getScreenConstraints
              .map(constraints => ({video: constraints}))
@@ -113,7 +113,7 @@ const getScreenP = () => {
   return new Promise((res, rej) => {
     checkExtension
     .fork(err => {
-            rej(new Error('Barco Screen Share extension is not installed or disabled'))
+            rej(new Error('Screen Share extension is not installed or disabled'))
           }, r => {
             ScreenShare.getScreenConstraints
              .map(constraints => ({video: constraints}))
@@ -153,7 +153,7 @@ const stopAllTracks = () =>
        .map(R.map(Media.stopTrack))
 
 /**
- * Task - Check if Barco ScreenShare extension is installed
+ * Task - Check if ScreenShare extension is installed
  * Predicate
  * 
  * @return {Task} Task(Boolean Boolean)
@@ -161,7 +161,7 @@ const stopAllTracks = () =>
 const checkExtension = ScreenShare.checkExtension
 
 /**
- * Promise - Check if Barco ScreenShare extension is installed
+ * Promise - Check if ScreenShare extension is installed
  * Predicate
  * 
  * @return {Promise}

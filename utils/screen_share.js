@@ -5,12 +5,6 @@ const Task = require('data.task')
 const Either = require('data.either')
 
 /**
- * Default Barco Extension ID
- * @type {String}
- */
-const defaultBarcoExtensionId = 'lkghdaajolaimnognigcipjbdkoeldpg'
-
-/**
  * Temporal cache for retrieved sourceId
  * @type {String}
  */
@@ -47,7 +41,7 @@ const handleMessage = data => {
   }
 
   // Extension notified his presence
-  if (data == 'barco-rtc-extension-loaded') {
+  if (data == 'custom-rtc-extension-loaded') {
     extensionState = 'ExtAvailable'
     return
   }
@@ -179,7 +173,7 @@ const getScreenConstraints = new Task((rej,res) => {
     }, 500)
     return
   } else {
-    rej(new Error('Barco Screen Share extension not responding'))
+    rej(new Error('Screen Share extension not responding'))
   }
 })
 
@@ -189,7 +183,6 @@ const getScreenConstraints = new Task((rej,res) => {
  * @type {Object}
  */
 exports = module.exports = {
-  defaultBarcoExtensionId,
   checkExtension,
   getScreenConstraints
 }

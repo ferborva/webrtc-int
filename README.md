@@ -32,9 +32,7 @@ Each of the following sections explains the mode of use of each of the functions
 
 To start using the module clone the repo into your `node_modules` folder:
 
-`git clone https://<BARCO_USERNAME>@git.barco.com/scm/ed/web-streams.git`
-
-* This should change soon to an `npm install <repo>` command when the module is published to the Barco NPM Registry. *
+`npm install git+https://github.com/ferborva/webrtc-int.git --save`
 
 Then require/import it into your front-end project:
 
@@ -120,7 +118,7 @@ const results = WebStreams.listSupportedConstraints()
 
 
 ### Get Screen Share MediaStream
-##### checkExtension:: Task - Check for the Barco Screen Share extension availability
+##### checkExtension:: Task - Check for the Screen Share extension availability
 Type: _Task_ (Predicate)
 
 ```Javascript
@@ -132,7 +130,7 @@ WebStreams.checkExtension
           })
 ```
 
-##### checkExtensionP:: Promise - Check for the Barco Screen Share extension availability
+##### checkExtensionP:: Promise - Check for the Screen Share extension availability
 Type: _Function_
 
 Return: _Promise_ (Predicate)
@@ -173,8 +171,8 @@ WebStreams.getScreenP()
 ```
 
 __Get Screen Share possible Error messages. These apply to the above calls:__
-- Barco Screen Share extension is not installed or disabled
-- Barco Screen Share extension not responding
+- Screen Share extension is not installed or disabled
+- Screen Share extension not responding
 - Screen Share permission denied by user
 - Get User Media not supported
 - Only secure origins are allowed
