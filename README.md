@@ -36,7 +36,7 @@ To start using the module clone the repo into your `node_modules` folder:
 
 Then require/import it into your front-end project:
 
-eg. `import WebStreams from 'web-streams';`
+eg. `import WebStreams from 'webrtc-int';`
 
 For the module to work you will need to leverage a build system which makes use of Babel (ES6 to compatibile syntax) and Browserify/Webpack or one alike.
 
