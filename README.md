@@ -21,8 +21,8 @@ The following API enpoints are available:
 - [checkExtensionP](#get-screen-share-mediastream)
 - [getScreen](#get-screen-share-mediastream)
 - [getScreenP](#get-screen-share-mediastream)
-- [getMedia](#get-user-mediaStream)
-- [setTestConstraints](#get-user-mediaStream)
+- [getMedia](#get-user-mediastream)
+- [setTestConstraints](#get-user-mediastream)
 - [stopAllTracks](#manage-media-tracks)
 
 
