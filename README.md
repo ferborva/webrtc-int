@@ -7,6 +7,7 @@ Goals:
 - Detect custom screenshare extension
 - Request screenshare extension
 - ES6 Syntax
+- Travis CI
 
 
 ## API
